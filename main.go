@@ -11,22 +11,39 @@
 package main
 
 import (
+	"flag"
 	"log"
 
-	// WARNING!
-	// Change this to a fully-qualified import path
-	// once you place this file into your project.
-	// For example,
-	//
-	//sw "github.com/GIT_USER_ID/GIT_REPO_ID/go"
-	//
+	"github.com/nestorneo/ecodata/config"
 	sw "github.com/nestorneo/ecodata/models"
 )
 
+var (
+	err         error
+	userCfgFile string
+	localConfig = config.DefaultConfig()
+)
+
+func init() {
+	flag.StringVar(
+		&userCfgFile, "config", "", "please provide server config")
+}
+
 func main() {
 	log.Printf("Server started")
+	flag.Parse()
+
+	if userCfgFile != "" {
+		log.Println("user provided config .... validating")
+		localConfig, err = config.GetConfigFromFile(userCfgFile)
+	}
+
+	if err != nil {
+		log.Panicln(err)
+	}
 
 	router := sw.NewRouter()
 
-	log.Fatal(router.Run(":8080"))
+	log.Fatal(router.Run(
+		localConfig.Address))
 }

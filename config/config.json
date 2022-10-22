@@ -1,0 +1,12 @@
+{
+    "Address" : ":7001",
+    "Security": true,
+    "DB" : {
+        "_comment": "inseguridad al mil xD",
+        "Enable" : true,
+        "Username": "nestor",
+        "Password": "nestor",
+        "Token": null,
+        "Connection":null
+    }
+}
