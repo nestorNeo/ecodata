@@ -15,7 +15,11 @@ Invoke-WebRequest -OutFile openapi-generator-cli.jar https://repo1.maven.org/mav
 java -jar openapi-generator-cli.jar help
 ```
 
-command to generate 
+command to generate on windows.
+please !!! generate on a different folder, otherwise you could overwrite actual implementation!!
 ```
-java -jar $HOME\bin\openapi-generator-cli.jar generate -g go-gin-server  -i .\spec.yaml --additional-properties=packageName=models
+mkdir generate
+cp .\api\openapi.yaml .\generate\
+cd .\generate\
+java -jar $HOME\bin\openapi-generator-cli.jar generate -g go-gin-server  -i .\openapi.yaml  --additional-properties=packageName=models
 ```
