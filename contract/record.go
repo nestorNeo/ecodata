@@ -27,15 +27,15 @@ import (
 */
 
 type Coordenadas struct {
-	Lat float64
-	Log float64
+	Lat float64 `json:"lat"`
+	Log float64 `json:"log"`
 }
 
 type AudioRecord struct {
-	Dispositivo    string
-	Desplazamiento []Coordenadas
-	Inicio         time.Time
-	Fin            time.Time
-	Name           string // name of the file with extension
-	Content        []byte
+	Dispositivo    string        `json:"dispositivo"`
+	Desplazamiento []Coordenadas `json:"desplazamiento"`
+	Inicio         time.Time     `json:"inicio"`
+	Fin            time.Time     `json:"fin"`
+	Name           string        // name of the file with extension
+	Content        []byte        `json:"content,omitempty"`
 }
