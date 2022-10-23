@@ -40,6 +40,8 @@ func (collector *Audio) Run() {
 			record, err := contract.InspectBundle(fullPath)
 			// TODO delete files with errors for security
 			if err != nil {
+				log.Println("error processing audio record, know issue")
+				log.Println(err)
 				os.Remove(fullPath)
 				continue
 			}
@@ -47,4 +49,5 @@ func (collector *Audio) Run() {
 			fmt.Println(record)
 		}
 	}
+	log.Println("audio collector is done")
 }
