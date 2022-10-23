@@ -53,13 +53,15 @@ func CreateBundle(c *gin.Context) {
 // GetBundleStatus - Get user by user name
 func GetBundleStatus(c *gin.Context) {
 
-	targetId := c.Param(BUNDLEPARAM)
+	// CURRENT WORKAROUND PENDING TO ADD DB just using context by now
 
+	targetId := c.Param(BUNDLEPARAM)
 	store := ginsession.FromContext(c)
 	content, found := store.Get(targetId)
+	fileLocation, foundFileName := store.Get(targetId + "_bundle_location")
 
 	// if not found in cached then it should be in the db more expensive. request
-	if !found {
+	if !found || !foundFileName {
 		c.JSON(
 			http.StatusNotFound, &Bundle{
 				Id:           targetId,
@@ -67,6 +69,12 @@ func GetBundleStatus(c *gin.Context) {
 			},
 		)
 		return
+	}
+
+	fileLocationStr := fmt.Sprintf("%s", fileLocation)
+	if _, err := os.Stat(fileLocationStr); errors.Is(err, os.ErrNotExist) {
+		store.Set(targetId, "PROCCESED")
+		store.Save()
 	}
 
 	c.JSON(http.StatusOK,

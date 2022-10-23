@@ -36,4 +36,6 @@ type AudioRecord struct {
 	Desplazamiento []Coordenadas
 	Inicio         time.Time
 	Fin            time.Time
+	Name           string // name of the file with extension
+	Content        []byte
 }
