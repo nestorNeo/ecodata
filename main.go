@@ -13,9 +13,12 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
 
 	ginsession "github.com/go-session/gin-session"
 
+	"github.com/go-co-op/gocron"
+	"github.com/nestorneo/ecodata/collectors"
 	"github.com/nestorneo/ecodata/config"
 	"github.com/nestorneo/ecodata/middleware"
 	sw "github.com/nestorneo/ecodata/models"
@@ -44,6 +47,15 @@ func main() {
 	if err != nil {
 		log.Panicln(err)
 	}
+
+	// recurrent activities
+	worker := &collectors.Audio{Cfg: *localConfig}
+
+	go func() {
+		s := gocron.NewScheduler(time.UTC)
+		s.Every(10).Seconds().SingletonMode().Do(worker.Run)
+		s.StartBlocking()
+	}()
 
 	// middlewares
 	// what is a middleware is an injector before reaching the actual endpoint it
