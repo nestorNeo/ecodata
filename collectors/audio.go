@@ -46,7 +46,9 @@ func (collector *Audio) Run() {
 				continue
 			}
 
-			fmt.Println(record)
+			fmt.Println(record.Name, record.Dispositivo, record.Inicio, record.Fin, "  ", len(record.Content))
+			os.Remove(fullPath)
+			log.Println(fullPath, "Procesado...")
 		}
 	}
 	log.Println("audio collector is done")
