@@ -14,7 +14,10 @@ import (
 	"flag"
 	"log"
 
+	ginsession "github.com/go-session/gin-session"
+
 	"github.com/nestorneo/ecodata/config"
+	"github.com/nestorneo/ecodata/middleware"
 	sw "github.com/nestorneo/ecodata/models"
 )
 
@@ -42,7 +45,13 @@ func main() {
 		log.Panicln(err)
 	}
 
-	router := sw.NewRouter()
+	// middlewares
+	// what is a middleware is an injector before reaching the actual endpoint it
+	// pre-sets intended actions
+	router := sw.NewRouter(
+		ginsession.New(),
+		middleware.GuidMiddleware(),
+	)
 
 	log.Fatal(router.Run(
 		localConfig.Address))

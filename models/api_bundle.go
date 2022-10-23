@@ -19,6 +19,12 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	ginsession "github.com/go-session/gin-session"
+)
+
+const (
+	UUID        = "uuid"
+	BUNDLEPARAM = "bundleId"
 )
 
 // CreateBundle - Upload bundle from device
@@ -35,12 +41,40 @@ func CreateBundle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{})
+	id, _ := c.Get("uuid")
+
+	c.JSON(http.StatusOK,
+		&Bundle{
+			Id:           id.(string),
+			BundleStatus: "ACCEPTED_TO_PROCESS",
+		})
 }
 
 // GetBundleStatus - Get user by user name
 func GetBundleStatus(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+
+	targetId := c.Param(BUNDLEPARAM)
+
+	store := ginsession.FromContext(c)
+	content, found := store.Get(targetId)
+
+	// if not found in cached then it should be in the db more expensive. request
+	if !found {
+		c.JSON(
+			http.StatusNotFound, &Bundle{
+				Id:           targetId,
+				BundleStatus: "NOT_FOUND",
+			},
+		)
+		return
+	}
+
+	c.JSON(http.StatusOK,
+		&Bundle{
+			Id:           targetId,
+			BundleStatus: fmt.Sprintf("%s", content),
+		},
+	)
 }
 
 func processBundle(c *gin.Context) error {
@@ -55,14 +89,14 @@ func processBundle(c *gin.Context) error {
 	}
 
 	// spawn a processing go-routine
-	go func(raw []byte) {
+	go func(raw []byte, c *gin.Context) {
 		log.Println("still working in backend pal ....")
 		f, err := os.CreateTemp("", "audioproc")
-		defer f.Close()
 		if err != nil {
 			log.Println(err)
 			return
 		}
+		defer f.Close()
 
 		log.Println("new file at", f.Name())
 		n, err := f.Write(raw)
@@ -72,7 +106,18 @@ func processBundle(c *gin.Context) error {
 			return
 		}
 		log.Println("written bytes n", n)
-	}(data)
+		// identifies this request id at server level
+		id, _ := c.Get(UUID)
+		store := ginsession.FromContext(c)
+
+		// ALL IN CACHE ARE BEING USED FOR LATER PROCESSING
+		store.Set(fmt.Sprintf("%s", id), "LOCAL_STORED_NOT_PROCESSED")
+		store.Set(fmt.Sprintf("%s_bundle_location", id), f.Name())
+		if err = store.Save(); err != nil {
+			log.Println(err)
+		}
+
+	}(data, c.Copy())
 
 	return nil
 }
