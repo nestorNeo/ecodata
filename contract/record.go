@@ -36,6 +36,6 @@ type AudioRecord struct {
 	Desplazamiento []Coordenadas `json:"desplazamiento"`
 	Inicio         time.Time     `json:"inicio"`
 	Fin            time.Time     `json:"fin"`
-	Name           string        // name of the file with extension
+	Name           string        `json:"audiofile"`
 	Content        []byte        `json:"content,omitempty"`
 }
