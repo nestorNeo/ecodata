@@ -1,9 +1,5 @@
 package contract
 
-import (
-	"time"
-)
-
 /*
 {
     "dispositivo": "nestor-samsung",
@@ -34,8 +30,9 @@ type Coordenadas struct {
 type AudioRecord struct {
 	Dispositivo    string        `json:"dispositivo"`
 	Desplazamiento []Coordenadas `json:"desplazamiento"`
-	Inicio         time.Time     `json:"inicio"`
-	Fin            time.Time     `json:"fin"`
-	Name           string        `json:"audiofile"`
-	Content        []byte        `json:"content,omitempty"`
+	// TODO agree in a timeformat to store it in db
+	Inicio  string `json:"inicio"`
+	Fin     string `json:"fin"`
+	Name    string `json:"audiofile"`
+	Content []byte `json:"content,omitempty"`
 }

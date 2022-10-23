@@ -33,6 +33,7 @@ func InspectBundle(zipPath string) (*AudioRecord, error) {
 
 	for _, file := range zf.File {
 		index[file.Name] = file
+		log.Println(file.Name)
 	}
 
 	meta, ok := index[INFOFILE]
