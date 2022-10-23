@@ -51,6 +51,10 @@ func main() {
 	router := sw.NewRouter(
 		ginsession.New(),
 		middleware.GuidMiddleware(),
+		middleware.TempStorage(
+			localConfig.PrefixForTempFile,
+			localConfig.StagingArea,
+		),
 	)
 
 	log.Fatal(router.Run(

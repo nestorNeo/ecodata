@@ -91,7 +91,9 @@ func processBundle(c *gin.Context) error {
 	// spawn a processing go-routine
 	go func(raw []byte, c *gin.Context) {
 		log.Println("still working in backend pal ....")
-		f, err := os.CreateTemp("", "audioproc")
+		f, err := os.CreateTemp(
+			c.MustGet("SERVER_STAGING_TMP_FILES").(string),
+			c.MustGet("SERVER_PREFIX_TMP_FILES").(string))
 		if err != nil {
 			log.Println(err)
 			return

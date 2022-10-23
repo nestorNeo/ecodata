@@ -17,3 +17,11 @@ func GuidMiddleware() gin.HandlerFunc {
 		fmt.Printf("The request with uuid %s is served \n", uuid)
 	}
 }
+
+func TempStorage(prefix, tmpdir string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("SERVER_STAGING_TMP_FILES", tmpdir)
+		c.Set("SERVER_PREFIX_TMP_FILES", prefix)
+		c.Next()
+	}
+}
