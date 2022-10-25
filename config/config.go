@@ -9,8 +9,9 @@ type Server struct {
 	Address  string
 	Security bool
 	// TODO implement overwrite for staging files
-	StagingArea string
-	DBAccess    DB
+	StagingArea       string
+	PrefixForTempFile string
+	DBAccess          DB
 }
 
 type DB struct {
@@ -23,8 +24,10 @@ type DB struct {
 
 func DefaultConfig() *Server {
 	return &Server{
-		Address:  ":8080",
-		Security: false,
+		Address:           ":8080",
+		Security:          false,
+		StagingArea:       "",
+		PrefixForTempFile: "ecoAudioFile",
 		DBAccess: DB{
 			Enable: false,
 		},

@@ -15,7 +15,7 @@ Invoke-WebRequest -OutFile openapi-generator-cli.jar https://repo1.maven.org/mav
 java -jar openapi-generator-cli.jar help
 ```
 
-command to generate 
+command to generate the golang server stubs
 ```
-java -jar $HOME\bin\openapi-generator-cli.jar generate -g go-gin-server  -i .\spec.yaml --additional-properties=packageName=models
+java -jar $HOME\bin\openapi-generator-cli.jar generate -g go-gin-server  -i .\openapi.yaml --additional-properties=packageName=models
 ```

@@ -55,6 +55,38 @@ paths:
         "400":
           description: Invalid bundle format
       summary: Upload bundle from device
+      tags:
+        - bundle
+  /bundle/{bundleId}:
+    get:
+      description: ""
+      operationId: getBundleStatus
+      parameters:
+      - description: 'The name that needs to be fetched. Use bundleID for testing. '
+        explode: false
+        in: path
+        name: bundleId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+          description: successful operation
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+      summary: Get user by user name
+      tags:
+      - bundle
   /user:
     post:
       description: This can only be done by the logged in user.
@@ -263,6 +295,21 @@ components:
             type: array
       description: List of user object
   schemas:
+    Bundle:
+      example:
+        id: John
+        status: "success"
+      properties:
+       id:
+         example: "7ad0b9f9-1188-4389-bcb7-e4833941fd15"
+         type: string
+       bundleStatus:
+         description: Bundle Status
+         example: "stored"
+         type: string
+      type: object
+      xml:
+         name: bundle
     User:
       example:
         firstName: John

@@ -13,8 +13,14 @@ package main
 import (
 	"flag"
 	"log"
+	"time"
 
+	ginsession "github.com/go-session/gin-session"
+
+	"github.com/go-co-op/gocron"
+	"github.com/nestorneo/ecodata/collectors"
 	"github.com/nestorneo/ecodata/config"
+	"github.com/nestorneo/ecodata/middleware"
 	sw "github.com/nestorneo/ecodata/models"
 )
 
@@ -42,7 +48,26 @@ func main() {
 		log.Panicln(err)
 	}
 
-	router := sw.NewRouter()
+	// recurrent activities
+	worker := &collectors.Audio{Cfg: *localConfig}
+
+	go func() {
+		s := gocron.NewScheduler(time.UTC)
+		s.Every(10).Seconds().SingletonMode().Do(worker.Run)
+		s.StartBlocking()
+	}()
+
+	// middlewares
+	// what is a middleware is an injector before reaching the actual endpoint it
+	// pre-sets intended actions
+	router := sw.NewRouter(
+		ginsession.New(),
+		middleware.GuidMiddleware(),
+		middleware.TempStorage(
+			localConfig.PrefixForTempFile,
+			localConfig.StagingArea,
+		),
+	)
 
 	log.Fatal(router.Run(
 		localConfig.Address))

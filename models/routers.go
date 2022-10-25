@@ -32,8 +32,13 @@ type Route struct {
 type Routes []Route
 
 // NewRouter returns a new router.
-func NewRouter() *gin.Engine {
+func NewRouter(middleware ...gin.HandlerFunc) *gin.Engine {
 	router := gin.Default()
+
+	for _, injection := range middleware {
+		router.Use(injection)
+	}
+
 	for _, route := range routes {
 		switch route.Method {
 		case http.MethodGet:
@@ -70,6 +75,13 @@ var routes = Routes{
 		http.MethodPost,
 		"/api/v1/bundle",
 		CreateBundle,
+	},
+
+	{
+		"GetBundleStatus",
+		http.MethodGet,
+		"/api/v1/bundle/:bundleId",
+		GetBundleStatus,
 	},
 
 	{
