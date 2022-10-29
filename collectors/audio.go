@@ -83,7 +83,7 @@ func (collector *Contaminacion) Run() {
 				log.Println(err)
 
 				parts := strings.Split(file.Name(), "_")
-				if len(parts) == 3 {
+				if len(parts) == 3 && collector.Cfg.DBAccess.Enable {
 					collector.basura.InsertOne(
 						context.TODO(), map[string]any{
 							"request_id": parts[1],
