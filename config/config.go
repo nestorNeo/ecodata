@@ -15,11 +15,13 @@ type Server struct {
 }
 
 type DB struct {
-	Enable     bool
-	Username   string
-	Password   string
-	Token      string
-	Connection string
+	Enable       bool
+	Username     string
+	Password     string
+	Token        string
+	Connection   string
+	Collection   string
+	DatabaseName string
 }
 
 func DefaultConfig() *Server {
@@ -29,7 +31,10 @@ func DefaultConfig() *Server {
 		StagingArea:       "",
 		PrefixForTempFile: "ecoAudioFile",
 		DBAccess: DB{
-			Enable: false,
+			Enable:       false,
+			Collection:   "android",
+			DatabaseName: "audio",
+			Connection:   "mongodb://localhost:27017/",
 		},
 	}
 }

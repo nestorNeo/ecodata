@@ -1,12 +1,15 @@
 {
-    "Address" : ":7001",
-    "Security": true,
-    "DB" : {
+    "Address" : ":8080",
+    "PrefixForTempFile": "ecoAudioFile",
+    "StagingArea":"",
+    "Security": false,
+    "DBAccess" : {
         "_comment": "inseguridad al mil xD",
         "Enable" : true,
         "Username": "nestor",
         "Password": "nestor",
         "Token": null,
-        "Connection":null
+        "Connection": "mongodb://localhost:27017/",
+        "DatabaseName" : "contaminacion"
     }
 }
