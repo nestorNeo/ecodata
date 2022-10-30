@@ -3,8 +3,8 @@
     "PrefixForTempFile": "ecoAudioFile",
     "StagingArea":"",
     "Security": true,
-    "SecurityCert": " /etc/letsencrypt/live/ecodata.leofigy.xyz/fullchain.pem",
-    "SecurityKey":" /etc/letsencrypt/live/ecodata.leofigy.xyz/privkey.pem",
+    "SecurityCert": "/etc/letsencrypt/live/ecodata.leofigy.xyz/fullchain.pem",
+    "SecurityKey":"/etc/letsencrypt/live/ecodata.leofigy.xyz/privkey.pem",
     "DBAccess" : {
         "_comment": "inseguridad al mil xD",
         "Enable" : false,
