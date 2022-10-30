@@ -1,13 +1,13 @@
 {
-    "Address" : ":8080",
+    "Address" : ":443",
     "PrefixForTempFile": "ecoAudioFile",
     "StagingArea":"",
-    "Security": false,
+    "Security": true,
     "SecurityCert": " /etc/letsencrypt/live/ecodata.leofigy.xyz/fullchain.pem",
     "SecurityKey":" /etc/letsencrypt/live/ecodata.leofigy.xyz/privkey.pem",
     "DBAccess" : {
         "_comment": "inseguridad al mil xD",
-        "Enable" : true,
+        "Enable" : false,
         "Username": "nestor",
         "Password": "nestor",
         "Token": null,

@@ -6,8 +6,11 @@ import (
 )
 
 type Server struct {
-	Address  string
-	Security bool
+	Address      string
+	Security     bool
+	SecurityCert string
+	SecurityKey  string
+
 	// TODO implement overwrite for staging files
 	StagingArea       string
 	PrefixForTempFile string

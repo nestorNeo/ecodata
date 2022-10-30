@@ -88,6 +88,13 @@ func main() {
 		),
 	)
 
-	log.Fatal(router.Run(
-		localConfig.Address))
+	if localConfig.Security {
+		log.Fatal(
+			router.RunTLS(localConfig.Address, localConfig.SecurityCert, localConfig.SecurityKey),
+		)
+	} else {
+		log.Fatal(router.Run(
+			localConfig.Address))
+	}
+
 }
