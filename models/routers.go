@@ -33,16 +33,33 @@ type Routes []Route
 
 // NewRouter returns a new router.
 func NewRouter(middleware ...gin.HandlerFunc) *gin.Engine {
-	router := gin.Default()
+	globalRouter := gin.Default()
+	// a new route for methods that need auth
+	router := globalRouter.Group("/secure")
 
 	for _, injection := range middleware {
 		router.Use(injection)
 	}
 
 	// NOT FOUND ROUTE
-	router.NoRoute(func(c *gin.Context) {
+	globalRouter.NoRoute(func(c *gin.Context) {
 		c.Data(http.StatusNotFound, "text/html; charset=utf-8", []byte(NOTFOUND))
 	})
+
+	for _, publicRoute := range publicRoutes {
+		switch publicRoute.Method {
+		case http.MethodGet:
+			globalRouter.GET(publicRoute.Pattern, publicRoute.HandlerFunc)
+		case http.MethodPost:
+			globalRouter.POST(publicRoute.Pattern, publicRoute.HandlerFunc)
+		case http.MethodPut:
+			globalRouter.PUT(publicRoute.Pattern, publicRoute.HandlerFunc)
+		case http.MethodPatch:
+			globalRouter.PATCH(publicRoute.Pattern, publicRoute.HandlerFunc)
+		case http.MethodDelete:
+			globalRouter.DELETE(publicRoute.Pattern, publicRoute.HandlerFunc)
+		}
+	}
 
 	for _, route := range routes {
 		switch route.Method {
@@ -59,7 +76,7 @@ func NewRouter(middleware ...gin.HandlerFunc) *gin.Engine {
 		}
 	}
 
-	return router
+	return globalRouter
 }
 
 // Index is the index handler.
@@ -67,14 +84,24 @@ func Index(c *gin.Context) {
 	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(INDEXCONTENT))
 }
 
-var routes = Routes{
+// public routes are static no middleware
+var publicRoutes = Routes{
 	{
 		"Index",
 		http.MethodGet,
-		"/api/v1/",
+		"/",
 		Index,
 	},
 
+	{
+		"LoginUser",
+		http.MethodGet,
+		"/user/login",
+		LoginUser,
+	},
+}
+
+var routes = Routes{
 	{
 		"CreateBundle",
 		http.MethodPost,
@@ -116,25 +143,16 @@ var routes = Routes{
 		"/api/v1/user/:username",
 		GetUserByName,
 	},
-
-	{
-		"LoginUser",
-		http.MethodGet,
-		"/api/v1/user/login",
-		LoginUser,
-	},
-
-	{
-		"LogoutUser",
-		http.MethodGet,
-		"/api/v1/user/logout",
-		LogoutUser,
-	},
-
 	{
 		"UpdateUser",
 		http.MethodPut,
 		"/api/v1/user/:username",
 		UpdateUser,
+	},
+	{
+		"LogoutUser",
+		http.MethodGet,
+		"/api/v1/user/logout",
+		LogoutUser,
 	},
 }
