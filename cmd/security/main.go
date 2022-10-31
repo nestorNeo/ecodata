@@ -58,5 +58,14 @@ func main() {
 		log.Fatalln("cannot SIGN", err)
 	}
 
+	fmt.Println("TOKEN ------------------------")
 	fmt.Println(token)
+	fmt.Println("TOKEN ------------------------")
+
+	maps, err := validator.IsValid(token)
+	if err != nil {
+		log.Fatalln("error in validation", err)
+	}
+
+	fmt.Println(maps)
 }

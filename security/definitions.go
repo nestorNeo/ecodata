@@ -3,7 +3,6 @@ package security
 import (
 	"crypto/rsa"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -16,9 +15,6 @@ type Validator struct {
 
 func NewValidator(keyPriv, keyPub string) (*Validator, error) {
 
-	fmt.Println(keyPriv)
-	fmt.Println(keyPub)
-
 	privData, err := os.ReadFile(keyPriv)
 
 	if err != nil {
@@ -30,11 +26,9 @@ func NewValidator(keyPriv, keyPub string) (*Validator, error) {
 		return nil, err
 	}
 
-	fmt.Println(string(privData))
 	priv, err := jwt.ParseRSAPrivateKeyFromPEM(privData)
 
 	if err != nil {
-		log.Println("error with private")
 		return nil, err
 	}
 
