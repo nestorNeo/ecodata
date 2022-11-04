@@ -1,7 +1,5 @@
 {
-    "dispositivo": "nestor-samsung-audio",
-    "tipo": "INVALID",
-    "co2": 40.4,
+    "dispositivo": "nestor-samsung",
     "desplazamiento": [
       {
         "lat": 20.675171,

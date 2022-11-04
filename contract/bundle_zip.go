@@ -23,7 +23,7 @@ func InspectBundle(zipPath string) (*AudioRecord, error) {
 
 	// just two files nothing more
 	log.Println("expecting two files in zip")
-	if len(zf.File) < 1 {
+	if len(zf.File) != 2 {
 		return nil, errors.New("security risk bundle has more than two files")
 	}
 
@@ -50,20 +50,6 @@ func InspectBundle(zipPath string) (*AudioRecord, error) {
 	err = json.Unmarshal(data, record)
 	if err != nil {
 		return nil, err
-	}
-
-	_, validType := VALIDTYPES[record.Tipo]
-
-	if !validType {
-		return record, errors.New("FATAL ERROR NOT SUPPORTED " + record.Tipo)
-	}
-
-	if record.Tipo == "CO2" {
-		// TODO validated required fields for CO2
-		if record.CO2 <= 0 {
-			return record, errors.New("invalid CO2 value , please provide a positive number")
-		}
-		return record, nil
 	}
 
 	rawData, ok := index[record.Name]

@@ -6,11 +6,8 @@ import (
 )
 
 type Server struct {
-	Address      string
-	Security     bool
-	SecurityCert string
-	SecurityKey  string
-
+	Address  string
+	Security bool
 	// TODO implement overwrite for staging files
 	StagingArea       string
 	PrefixForTempFile string
@@ -18,13 +15,11 @@ type Server struct {
 }
 
 type DB struct {
-	Enable       bool
-	Username     string
-	Password     string
-	Token        string
-	Connection   string
-	Collection   string
-	DatabaseName string
+	Enable     bool
+	Username   string
+	Password   string
+	Token      string
+	Connection string
 }
 
 func DefaultConfig() *Server {
@@ -34,10 +29,7 @@ func DefaultConfig() *Server {
 		StagingArea:       "",
 		PrefixForTempFile: "ecoAudioFile",
 		DBAccess: DB{
-			Enable:       false,
-			Collection:   "android",
-			DatabaseName: "audio",
-			Connection:   "mongodb://localhost:27017/",
+			Enable: false,
 		},
 	}
 }

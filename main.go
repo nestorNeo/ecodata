@@ -11,7 +11,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"log"
 	"time"
@@ -23,8 +22,6 @@ import (
 	"github.com/nestorneo/ecodata/config"
 	"github.com/nestorneo/ecodata/middleware"
 	sw "github.com/nestorneo/ecodata/models"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var (
@@ -41,7 +38,6 @@ func init() {
 func main() {
 	log.Printf("Server started")
 	flag.Parse()
-	var client *mongo.Client
 
 	if userCfgFile != "" {
 		log.Println("user provided config .... validating")
@@ -52,23 +48,8 @@ func main() {
 		log.Panicln(err)
 	}
 
-	if localConfig.DBAccess.Enable {
-		log.Println("CONFIGURING DB")
-		var ctx = context.TODO()
-		clientOptions := options.Client().ApplyURI(localConfig.DBAccess.Connection)
-		client, err = mongo.Connect(ctx, clientOptions)
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else {
-		log.Println("DRY RUN NO DB !!!!!")
-	}
-
 	// recurrent activities
-	worker, err := collectors.NewCollector(*localConfig, client)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	worker := &collectors.Audio{Cfg: *localConfig}
 
 	go func() {
 		s := gocron.NewScheduler(time.UTC)
@@ -88,13 +69,6 @@ func main() {
 		),
 	)
 
-	if localConfig.Security {
-		log.Fatal(
-			router.RunTLS(localConfig.Address, localConfig.SecurityCert, localConfig.SecurityKey),
-		)
-	} else {
-		log.Fatal(router.Run(
-			localConfig.Address))
-	}
-
+	log.Fatal(router.Run(
+		localConfig.Address))
 }

@@ -1,17 +1,12 @@
 {
-    "Address" : ":8080",
-    "PrefixForTempFile": "ecoAudioFile",
-    "StagingArea":"",
-    "Security": false,
-    "SecurityCert": " /etc/letsencrypt/live/ecodata.leofigy.xyz/fullchain.pem",
-    "SecurityKey":" /etc/letsencrypt/live/ecodata.leofigy.xyz/privkey.pem",
-    "DBAccess" : {
+    "Address" : ":7001",
+    "Security": true,
+    "DB" : {
         "_comment": "inseguridad al mil xD",
         "Enable" : true,
         "Username": "nestor",
         "Password": "nestor",
         "Token": null,
-        "Connection": "mongodb://localhost:27017/",
-        "DatabaseName" : "contaminacion"
+        "Connection":null
     }
 }

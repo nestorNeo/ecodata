@@ -98,11 +98,10 @@ func processBundle(c *gin.Context) error {
 
 	// spawn a processing go-routine
 	go func(raw []byte, c *gin.Context) {
-		id, _ := c.Get(UUID)
 		log.Println("still working in backend pal ....")
 		f, err := os.CreateTemp(
 			c.MustGet("SERVER_STAGING_TMP_FILES").(string),
-			c.MustGet("SERVER_PREFIX_TMP_FILES").(string)+fmt.Sprintf("_%s_", id))
+			c.MustGet("SERVER_PREFIX_TMP_FILES").(string))
 		if err != nil {
 			log.Println(err)
 			return
@@ -118,6 +117,7 @@ func processBundle(c *gin.Context) error {
 		}
 		log.Println("written bytes n", n)
 		// identifies this request id at server level
+		id, _ := c.Get(UUID)
 		store := ginsession.FromContext(c)
 
 		// ALL IN CACHE ARE BEING USED FOR LATER PROCESSING

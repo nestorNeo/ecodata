@@ -39,11 +39,6 @@ func NewRouter(middleware ...gin.HandlerFunc) *gin.Engine {
 		router.Use(injection)
 	}
 
-	// NOT FOUND ROUTE
-	router.NoRoute(func(c *gin.Context) {
-		c.Data(http.StatusNotFound, "text/html; charset=utf-8", []byte(NOTFOUND))
-	})
-
 	for _, route := range routes {
 		switch route.Method {
 		case http.MethodGet:
@@ -64,7 +59,7 @@ func NewRouter(middleware ...gin.HandlerFunc) *gin.Engine {
 
 // Index is the index handler.
 func Index(c *gin.Context) {
-	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(INDEXCONTENT))
+	c.String(http.StatusOK, "Hello World!")
 }
 
 var routes = Routes{
