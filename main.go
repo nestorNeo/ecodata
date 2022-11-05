@@ -16,6 +16,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	ginsession "github.com/go-session/gin-session"
 
 	"github.com/go-co-op/gocron"
@@ -23,6 +24,7 @@ import (
 	"github.com/nestorneo/ecodata/config"
 	"github.com/nestorneo/ecodata/middleware"
 	sw "github.com/nestorneo/ecodata/models"
+	"github.com/nestorneo/ecodata/security"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -41,7 +43,10 @@ func init() {
 func main() {
 	log.Printf("Server started")
 	flag.Parse()
-	var client *mongo.Client
+	var (
+		client    *mongo.Client
+		validator *security.Validator
+	)
 
 	if userCfgFile != "" {
 		log.Println("user provided config .... validating")
@@ -50,6 +55,25 @@ func main() {
 
 	if err != nil {
 		log.Panicln(err)
+	}
+
+	// MIDDLEWARES
+	middlewares := []gin.HandlerFunc{
+		ginsession.New(),
+		middleware.GuidMiddleware(),
+		middleware.TempStorage(
+			localConfig.PrefixForTempFile,
+			localConfig.StagingArea,
+		),
+	}
+
+	if localConfig.AuthEnable {
+		validator, err = security.NewValidator(localConfig.AuthSignKey, localConfig.AuthSignKey+".pub")
+		if err != nil {
+			log.Panic(err)
+		}
+		middlewares = append(middlewares, validator.AuthMiddleware())
+
 	}
 
 	if localConfig.DBAccess.Enable {
@@ -80,12 +104,7 @@ func main() {
 	// what is a middleware is an injector before reaching the actual endpoint it
 	// pre-sets intended actions
 	router := sw.NewRouter(
-		ginsession.New(),
-		middleware.GuidMiddleware(),
-		middleware.TempStorage(
-			localConfig.PrefixForTempFile,
-			localConfig.StagingArea,
-		),
+		middlewares...,
 	)
 
 	if localConfig.Security {
@@ -96,5 +115,4 @@ func main() {
 		log.Fatal(router.Run(
 			localConfig.Address))
 	}
-
 }

@@ -10,6 +10,8 @@ type Server struct {
 	Security     bool
 	SecurityCert string
 	SecurityKey  string
+	AuthEnable   bool
+	AuthSignKey  string
 
 	// TODO implement overwrite for staging files
 	StagingArea       string
@@ -31,6 +33,8 @@ func DefaultConfig() *Server {
 	return &Server{
 		Address:           ":8080",
 		Security:          false,
+		AuthEnable:        false,
+		AuthSignKey:       "./security/authpriv",
 		StagingArea:       "",
 		PrefixForTempFile: "ecoAudioFile",
 		DBAccess: DB{
