@@ -99,11 +99,11 @@ func (collector *Contaminacion) Run() {
 
 			if collector.Cfg.DBAccess.Enable && collector.client != nil {
 				switch record.Tipo {
-				case "AUDIO":
+				case "NOISE_MEASURE":
 					_, err = collector.audio.InsertOne(context.TODO(), record)
 
 					break
-				case "CO2":
+				case "CO2_MEASURE":
 					_, err = collector.co2.InsertOne(context.TODO(), record)
 					break
 				default:
@@ -114,7 +114,7 @@ func (collector *Contaminacion) Run() {
 				}
 			}
 
-			fmt.Println(record.Name, record.Dispositivo, record.Inicio, record.Fin, "  ", len(record.Content))
+			fmt.Println(record.Dispositivo, record.Inicio, record.Fin, record.Ppm, record.Moda, record.Decibels, record.Std, record.Interval, "  ", len(record.Content))
 			os.Remove(fullPath)
 			log.Println(fullPath, "Procesado...")
 		}

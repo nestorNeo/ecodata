@@ -12,7 +12,7 @@ const (
 	INFOFILE = "meta.json"
 )
 
-func InspectBundle(zipPath string) (*AudioRecord, error) {
+func InspectBundle(zipPath string) (*Record, error) {
 	log.Println("opening zip file")
 	zf, err := zip.OpenReader(zipPath)
 	if err != nil {
@@ -22,12 +22,12 @@ func InspectBundle(zipPath string) (*AudioRecord, error) {
 	defer zf.Close()
 
 	// just two files nothing more
-	log.Println("expecting two files in zip")
+	log.Println("Starting file checks")
 	if len(zf.File) < 1 {
 		return nil, errors.New("security risk bundle has more than two files")
 	}
 
-	record := &AudioRecord{}
+	record := &Record{}
 
 	index := make(map[string]*zip.File)
 
@@ -52,32 +52,24 @@ func InspectBundle(zipPath string) (*AudioRecord, error) {
 		return nil, err
 	}
 
-	_, validType := VALIDTYPES[record.Tipo]
+	switch record.Tipo {
+	case "CO2_MEASURE":
+		log.Println("found co2 type doing processing")
+		if isValidError := record.IsValidCO2(); isValidError != nil {
+			return record, isValidError
+		}
+		break
+	case "NOISE_MEASURE":
+		log.Println("found noise record doingi processing")
 
-	if !validType {
+		if isValidError := record.IsValidNoise(); isValidError != nil {
+			return record, isValidError
+		}
+		break
+	default:
 		return record, errors.New("FATAL ERROR NOT SUPPORTED " + record.Tipo)
 	}
 
-	if record.Tipo == "CO2" {
-		// TODO validated required fields for CO2
-		if record.CO2 <= 0 {
-			return record, errors.New("invalid CO2 value , please provide a positive number")
-		}
-		return record, nil
-	}
-
-	rawData, ok := index[record.Name]
-
-	if !ok {
-		return nil, errors.New("filename pointed by meta is no found")
-	}
-	data, err = loadFieldData(rawData)
-
-	if err != nil {
-		return nil, err
-	}
-
-	record.Content = data
 	return record, nil
 }
 
