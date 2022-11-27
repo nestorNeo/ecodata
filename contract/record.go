@@ -37,7 +37,7 @@ type Record struct {
 	Dispositivo string    `json:"dispositivo"`
 	Inicio      string    `json:"begin_time"`
 	Fin         string    `json:"end_time"`
-	Ppm         float64   `json:"ppm,omitempty"`
+	Ppm         []float64 `json:"ppm,omitempty"`
 	Moda        []float64 `json:"moda,omitempty"`
 	Decibels    []float64 `json:"dB,omitempty"`
 	Std         []float64 `json:"std,omitempty"`
@@ -49,7 +49,7 @@ type Record struct {
 
 func (r *Record) IsValidCO2() error {
 
-	if r.Ppm < 0 {
+	if len(r.Ppm) < 1 {
 		return errors.New("ppm cannot be smaller than 0")
 	}
 	return nil

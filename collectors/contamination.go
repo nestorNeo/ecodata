@@ -57,7 +57,7 @@ func (collector *Contaminacion) Init() error {
 
 func (collector *Contaminacion) Run() {
 
-	log.Println(uuid.NewString(), "*************** AUDIO PROCESSOR **************")
+	log.Println(uuid.NewString(), "*************** CONTAMINACION PROCESSOR **************")
 
 	stangingDir := os.TempDir()
 
