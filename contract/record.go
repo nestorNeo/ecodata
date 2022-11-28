@@ -1,5 +1,7 @@
 package contract
 
+import "errors"
+
 /*
 {
     "dispositivo": "nestor-samsung",
@@ -24,24 +26,39 @@ package contract
 
 var (
 	VALIDTYPES = map[string]bool{
-		"CO2":   true,
-		"AUDIO": true,
+		"CO2_MEASURE":   true,
+		"AUDIO":         true,
+		"NOISE_MEASURE": true,
 	}
 )
 
-type Coordenadas struct {
-	Lat float64 `json:"lat"`
-	Log float64 `json:"log"`
+type Record struct {
+	Tipo        string    `json:"type"`
+	Dispositivo string    `json:"dispositivo"`
+	Inicio      string    `json:"begin_time"`
+	Fin         string    `json:"end_time"`
+	Ppm         []float64 `json:"ppm,omitempty"`
+	Moda        []float64 `json:"moda,omitempty"`
+	Decibels    []float64 `json:"dB,omitempty"`
+	Std         []float64 `json:"std,omitempty"`
+	Interval    int       `json:"interval,omitempty"`
+	Lat         []float64 `json:"lat,omitempty"`
+	Lon         []float64 `json:"lon,omitempty"`
+	Content     []byte    `json:"content,omitempty"`
 }
 
-type AudioRecord struct {
-	Tipo           string        `json:"tipo"`
-	Dispositivo    string        `json:"dispositivo"`
-	Desplazamiento []Coordenadas `json:"desplazamiento"`
-	// TODO agree in a timeformat to store it in db
-	Inicio  string  `json:"inicio"`
-	Fin     string  `json:"fin"`
-	Name    string  `json:"audiofile"`
-	CO2     float64 `json:"co2"`
-	Content []byte  `json:"content,omitempty"`
+func (r *Record) IsValidCO2() error {
+
+	if len(r.Ppm) < 1 {
+		return errors.New("ppm cannot be smaller than 0")
+	}
+	return nil
+}
+
+func (r *Record) IsValidNoise() error {
+	valid := len(r.Moda) > 0 && len(r.Std) > 0 && len(r.Decibels) > 0
+	if valid {
+		return nil
+	}
+	return errors.New("moda, std and dB are required")
 }
