@@ -37,6 +37,7 @@ type Record struct {
 	Dispositivo string    `json:"dispositivo"`
 	Inicio      string    `json:"begin_time"`
 	Fin         string    `json:"end_time"`
+	Context     string    `json:"transporte,omitempty"`
 	Ppm         []float64 `json:"ppm,omitempty"`
 	Moda        []float64 `json:"moda,omitempty"`
 	Decibels    []float64 `json:"dB,omitempty"`
