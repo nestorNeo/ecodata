@@ -114,10 +114,10 @@ func (collector *Contaminacion) Run() {
 				}
 			}
 
-			fmt.Println(record.Dispositivo, record.Inicio, record.Fin, record.Ppm, record.Moda, record.Decibels, record.Std, record.Interval, "  ", len(record.Content))
+			fmt.Println(record.Dispositivo, record.Inicio, record.Fin, record.Context, record.Ppm, record.Moda, record.Decibels, record.Std, record.Interval, "  ", len(record.Content))
 			os.Remove(fullPath)
 			log.Println(fullPath, "Procesado...")
 		}
 	}
-	log.Println("audio collector is done")
+	log.Println("Contamination collector is done")
 }
